@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container d-flex justify-content-center align-items-center" style="height: 100vh; background-color: #f7f7f7;">
+      <div class="col-md-6">
+        <form ng-submit="submitForm()">
+          <div class="form-group">
+            <label for="fName">First name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="fName"
+              placeholder="First Name"
+              ng-model="formData.fName"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="lName">Last name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lName"
+              placeholder="Last Name"
+              ng-model="formData.lName"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              placeholder="Username"
+              ng-model="formData.username"
+              required
+            />
+            <div
+              ng-show="form.username.$error.required && form.username.$dirty"
+              class="text-danger"
+            >
+              Username is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="name@example.com"
+              ng-model="formData.email"
+              required
+            />
+            <div
+              ng-show="form.email.$error.email && form.email.$dirty"
+              class="text-danger"
+            >
+              Please enter a valid email address.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputPassword4">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="inputPassword4"
+              placeholder="Password"
+              ng-model="formData.pass"
+              required
+              minlength="8"
+              maxlength="30"
+            />
+            <div
+              ng-show="form.inputPassword4.$error.required && form.inputPassword4.$dirty"
+              class="text-danger"
+            >
+              Password is required.
+            </div>
+            <div ng-show="form.inputPassword4.$error.minlength" class="text-danger">
+              Password must be at least 8 characters long.
+            </div>
+            <div ng-show="form.inputPassword4.$error.maxlength" class="text-danger">
+              Password cannot exceed 30 characters.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cnfrmPass">Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="cnfrmPass"
+              ng-model="formData.cnfrmPass"
+              placeholder="Confirm Password"
+              required
+              minlength="8"
+              maxlength="30"
+              ng-pattern="formData.pass"
+            />
+
+            <div
+              ng-show="form.cnfrmPass.$error.required && form.cnfrmPass.$dirty"
+              class="text-danger"
+            >
+              Confirm Password is required.
+            </div>
+            <div ng-show="form.cnfrmPass.$error.minlength" class="text-danger">
+              Confirm Password must be at least 8 characters long.
+            </div>
+            <div ng-show="form.cnfrmPass.$error.maxlength" class="text-danger">
+              Confirm Password cannot exceed 30 characters.
+            </div>
+            <div ng-show="formData.pass !== formData.cnfrmPass" class="text-danger">
+              Passwords do not match.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
