@@ -36,7 +36,7 @@ myApp.controller("indexController", [
             $scope.loginData = {};
       
             $http
-              .post("http://10.21.81.110:8000/groceryapp/login/", userLogin)
+              .post("http://10.21.81.248:8000/groceryapp/login/", userLogin)
               .then(function (response) {
                 console.log(response);
               })
@@ -48,6 +48,12 @@ myApp.controller("indexController", [
                 }
               });
           };
+
+        // $scope.isDropdownOpen = false;
+        
+        // $scope.toggleDropdown = function () {
+        //     $scope.isDropdownOpen = !$scope.isDropdownOpen;
+        // };
 
 }]);
 
@@ -70,7 +76,7 @@ myApp.controller("loginController", [
         $scope.loginData = {};
   
         $http
-          .post("http://10.21.81.110:8000/groceryapp/login/", userLogin)
+          .post("http://10.21.81.248/groceryapp/login/", userLogin)
           .then(function (response) {
             console.log(response);
           })
@@ -114,7 +120,7 @@ myApp.controller("registerController", [
   
           $http({
             method: "POST",
-            url: "http://10.21.81.110:8000/groceryapp/register/",
+            url: "http://10.21.81.248:8000/groceryapp/register/",
             data: userData
           })
             .then(function (response) {

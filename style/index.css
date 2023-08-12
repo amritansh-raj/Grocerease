@@ -1,0 +1,14 @@
+#search {
+    color: black;
+    border-color: #fe7b05;
+}
+
+#search:hover{
+    background-color: #fe7b05;
+    color: white;
+}
+
+#search-icon{
+    font-family: "bootstrap-icons";
+}
+
