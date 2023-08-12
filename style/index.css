@@ -19,3 +19,13 @@
 #password{
     font-family: "bootstrap-icons";
 }
+
+#search-icon:focus{
+    border-color: #fe7b05;
+}
+
+.sale{
+    position: absolute;
+    bottom: 0px;
+    font-size: 60px;
+}
