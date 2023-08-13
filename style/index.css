@@ -26,6 +26,8 @@
 
 .sale{
     position: absolute;
-    bottom: 0px;
+    bottom: 570px;
+    left: 250px;
     font-size: 60px;
+    color: #fe7b05;
 }

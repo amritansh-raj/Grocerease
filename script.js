@@ -1,4 +1,5 @@
 var myApp = angular.module("grocerease", ["ui.router"]);
+var apiURl = "https://10.21.81.248:8000/"
 
 myApp.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise("/home");
@@ -42,8 +43,12 @@ myApp.controller("indexController", [
 
       $scope.loginData = {};
 
-      $http
-        .post("http://10.21.81.248:8000/groceryapp/login/", userLogin)
+      $http({
+        method: "POST",
+        url: apiURl + "groceryapp/login/",
+        data: userLogin,
+        withCredentials: true
+      })
         .then(function (response) {
           console.log(response);
 
@@ -74,39 +79,39 @@ myApp.controller("indexController", [
   },
 ]);
 
-myApp.controller("loginController", [
-  "$scope",
-  "$http",
-  "$state",
-  "$window",
-  function ($scope, $http, $state, $window) {
-    $scope.loginData = {};
+// myApp.controller("loginController", [
+//   "$scope",
+//   "$http",
+//   "$state",
+//   "$window",
+//   function ($scope, $http, $state, $window) {
+//     $scope.loginData = {};
 
-    $scope.submitLoginForm = function () {
-      var userLogin = {
-        username: $scope.loginData.username,
-        password: $scope.loginData.password,
-      };
+//     $scope.submitLoginForm = function () {
+//       var userLogin = {
+//         username: $scope.loginData.username,
+//         password: $scope.loginData.password,
+//       };
 
-      console.log(userLogin);
+//       console.log(userLogin);
 
-      $scope.loginData = {};
+//       $scope.loginData = {};
 
-      $http
-        .post("http://10.21.81.248/groceryapp/login/", userLogin)
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          if (error.data && error.data.message) {
-            $window.alert(error.data.message);
-          } else {
-            $window.alert("An error occured. Please try again");
-          }
-        });
-    };
-  },
-]);
+//       $http
+//         .post("https://10.21.81.248/groceryapp/login/", userLogin)
+//         .then(function (response) {
+//           console.log(response);
+//         })
+//         .catch(function (error) {
+//           if (error.data && error.data.message) {
+//             $window.alert(error.data.message);
+//           } else {
+//             $window.alert("An error occured. Please try again");
+//           }
+//         });
+//     };
+//   },
+// ]);
 
 myApp.controller("registerController", [
   "$scope",
@@ -136,7 +141,7 @@ myApp.controller("registerController", [
 
         $http({
           method: "POST",
-          url: "http://10.21.81.248:8000/groceryapp/register/",
+          url: apiURl + "groceryapp/register/",
           data: userData,
         })
           .then(function (response) {
