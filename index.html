@@ -110,55 +110,16 @@
                         </div>
 
                         <div class="row featured ms-auto mt-5">
-                            <div class="col-md-3">
+                            <div class="col-md-3" ng-repeat="product in products">
                                 <div class="card" style="width: 18rem;">
-                                    <img src="..." class="card-img-top" alt="...">
+                                    <img src="https://10.21.83.82:8000/media/{{ product.Image }}" class="card-img-top" alt="...">
                                     <div class="card-body">
-                                      <h5 class="card-title">Card title</h5>
-                                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                      <h5 class="card-title">{{product.Product_name}}</h5>
+                                      <p class="card-text">₹{{product.Price}}</p>
                                     </div>
                                     <div class="card-body">
-                                      <a href="#" class="card-link">Card link</a>
-                                      <a href="#" class="card-link">Another link</a>
-                                    </div>
-                                </div>
-                            </div> 
-                            <div class="col-md-3">
-                                <div class="card" style="width: 18rem;">
-                                    <img src="..." class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                      <h5 class="card-title">Card title</h5>
-                                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    </div>
-                                    <div class="card-body">
-                                      <a href="#" class="card-link">Card link</a>
-                                      <a href="#" class="card-link">Another link</a>
-                                    </div>
-                                </div>
-                            </div> 
-                            <div class="col-md-3">
-                                <div class="card" style="width: 18rem;">
-                                    <img src="..." class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                      <h5 class="card-title">Card title</h5>
-                                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    </div>
-                                    <div class="card-body">
-                                      <a href="#" class="card-link">Card link</a>
-                                      <a href="#" class="card-link">Another link</a>
-                                    </div>
-                                </div>
-                            </div> 
-                            <div class="col-md-3">
-                                <div class="card" style="width: 18rem;">
-                                    <img src="..." class="card-img-top" alt="...">
-                                    <div class="card-body">
-                                      <h5 class="card-title">Card title</h5>
-                                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    </div>
-                                    <div class="card-body">
-                                      <a href="#" class="card-link">Card link</a>
-                                      <a href="#" class="card-link">Another link</a>
+                                        <button type="button" class="btn btn-primary">Buy now</button>
+                                        <button type="button" class="btn btn-primary" ng-click="addtocart(product)">Add to cart</button>
                                     </div>
                                 </div>
                             </div> 

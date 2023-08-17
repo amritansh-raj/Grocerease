@@ -40,6 +40,42 @@ myApp.controller("indexController", [
   function ($scope, $http, $state, $window) {
     $scope.userLoggedIn = false;
 
+    $http({
+      method: "GET",
+      url: apiUrl + "addproduct/",
+      withCredentials: true,
+      params: {categoryid : 27}
+    })
+      .then( function(response){
+
+        products = response.data
+
+        if(products){
+          $scope.products = products
+        }
+
+        console.log($scope.products)
+      })
+      .catch( function(error){
+        console.log(error);
+      })
+
+    $scope.addtocart = function(product){
+
+      $http({
+        method: "POST",
+        url: apiUrl + "addtocart/",
+        withCredentials: true,
+        data: {productid : product.id}
+      })
+        .then(function(response){
+          console.log(response);
+        })
+        .cacth(function(error){
+          console.log(error)
+        })
+    }
+
     $scope.submitLoginForm = function () {
       var userLogin = {
         username: $scope.loginData.username,
@@ -484,6 +520,22 @@ myApp.controller("productController", [
       console.log("save product completed");
     };
 
+    $scope.delProduct = function(product){
+
+      $http({
+        method: "DELETE",
+        url: apiUrl + "addproduct/",
+        withCredentials: true,
+        data: { productid: product.id },
+      })
+        .then(function (response) {
+          console.log("deleted");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
   },
 ]);
 
@@ -493,5 +545,30 @@ myApp.controller("cartController", [
   "$scope",
   "$http",
   "$state",
-  function ($scope, $http, $state) {},
+  function ($scope, $http, $state) {
+
+    $http({
+      method: "GET",
+      url: apiUrl + "addtocart/",
+      withCredentials: true,
+    })
+      .then(function(response){
+        
+        var cartItems = response.data;
+
+        if (cartItems) {
+          $scope.cartItems = cartItems;
+
+          $scope.totalPrice = cartItems.reduce(function (total, item) {
+            return total + item.Product__Price;
+          }, 0);
+        }
+
+        console.log($scope.cartItems);
+        
+      })
+      .catch(function(error){
+        console.log(error);
+      })
+  },
 ]);

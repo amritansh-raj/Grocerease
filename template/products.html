@@ -80,7 +80,7 @@
                 <h5 class="card-title d-flex justify-content-center">{{ product.Product_name }}</h5>
                 <div class="button" ng-hide="product.editMode">
                   <button class="btn btn-primary" ng-click="editProduct(product)">Edit</button>
-                <button class="btn btn-primary" ng-click="editProduct(product)">Delete</button>
+                <button class="btn btn-primary" ng-click="delProduct(product)">Delete</button>
                 </div>
                 <div ng-if="product.editMode">
                   <form ng-submit="editProduct(product)">
