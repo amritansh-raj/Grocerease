@@ -1,11 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
+
 <body>
-    
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+      <a class="navbar-brand" href="#"> <img src="media/logo/leaves.png" alt="Grocerease" height="30px"
+          width="200px"></a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav ms-auto">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item cart-Btn">
+              <a class="nav-link cart-Btn" ui-sref="cart"
+                style="background-color: #fe7b05; border-radius: 5px; color: white;">
+                <i class="bi bi-cart-fill"></i> Cart
+              </a>
+            </li>
+            <li class="nav-item login-Btn ms-3 mt-0" ng-show="!userLoggedIn">
+              <a class="nav-link login-Btn" href="#" ng-click="logout()">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="vh-100" style="background-color: #eee">
+    <div class="container h-100" style="padding-top: 100px">
+
+      <div class="container-fluid d-flex justify-content-center border border-primary-subtle">
+        <form ng-submit="addCategory()">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="input-group mb-3 mt-3">
+                <input type="text" class="input-group-text" placeholder="Category name" id="sectionName" ng-model="sectionName">  
+              </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="sectionImage">Choose file</label>
+                <input type="file" class="form-control" id="sectionImage" accept="image/*" ng-model="sectionImage">
+            </div>
+            </div>
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+              <button type="submit" class="btn btn-primary">Add</button>
+            </div>            
+          </div>
+        </form>
+      </div>
+
+      <div class="card-container">
+        <div class="row">
+          <div class="col-md-2 me-3 ms-4" style="width: 14rem" ng-repeat="category in categories">
+            <a ui-sref="productPage" ng-click="showProducts(category)">
+              <img ng-src="https://10.21.83.82:8000/media/{{ category.catog_image }}" alt="{{ category.Category_name }}"
+              width="200" />
+            </a>
+            <div class="card-body"> 
+              <h5 class="card-title d-flex justify-content-center">{{ category.Category_name }}</h5>
+              <div class="button" ng-hide="category.editMode">
+                <button class="btn btn-primary" ng-click="editCategory(category)">Edit</button>
+              <button class="btn btn-primary" ng-click="delCategory(category)">Delete</button>
+              </div>
+              <div ng-if="category.editMode">
+                <input type="text" ng-model="category.updateName" class="form-control" />
+                <input type="file" ng-model="category.updateImage" class="custom-file-input" id="updatedImage"
+                  accept="image/*" />
+                <button class="btn btn-primary" ng-click="saveEdit(category)">
+                  Add
+                </button>
+                <button class="btn btn-secondary" ng-click="cancelEdit(category)">
+                  Cancel
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
 </body>
+
 </html>
