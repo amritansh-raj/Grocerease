@@ -43,40 +43,36 @@ myApp.controller("indexController", [
     $http({
       method: "GET",
       url: apiUrl + "homeproduct/",
-      withCredentials: true
+      withCredentials: true,
     })
-      .then( function(response){
+      .then(function (response) {
+        products = response.data;
 
-        products = response.data
-
-        if(products){
-          $scope.products = products
+        if (products) {
+          $scope.products = products;
         }
 
-        console.log($scope.products)
+        console.log($scope.products);
       })
-      .catch( function(error){
+      .catch(function (error) {
         console.log(error);
-      })
+      });
 
-    $scope.addtocart = function(product){
-
+    $scope.addtocart = function (product) {
       $http({
         method: "POST",
         url: apiUrl + "addtocart/",
         withCredentials: true,
-        data: {productid : product.id}
+        data: { productid: product.id },
       })
-        .then(function(response){
+        .then(function (response) {
           console.log(response);
           $window.alert(response.data.message);
         })
-        .catch(function(error){
-          console.log(error)
-        })
-    }
-
-
+        .catch(function (error) {
+          console.log(error);
+        });
+    };
 
     $scope.submitLoginForm = function () {
       var userLogin = {
@@ -105,7 +101,7 @@ myApp.controller("indexController", [
             $state.go("manager");
           } else {
             console.log("home");
-            $('.modal-backdrop').remove();
+            $(".modal-backdrop").remove();
             // $('#exampleModal').on('shown.bs.modal', function () {
             //   $('#exampleModal').modal('hide');
             // });
@@ -137,8 +133,6 @@ myApp.controller("indexController", [
         });
       $state.go("Home");
     };
-
-
   },
 ]);
 
@@ -199,45 +193,49 @@ myApp.controller("managerController", [
   function ($scope, $http, $state, $rootScope) {
     $scope.categories = [];
 
-    $http({
-      method: "GET",
-      url: apiUrl + "product/",
-      withCredentials: true,
-    })
-      .then(function (response) {
-        console.log(response);
-        var categories = response.data;
-
-        if (categories) {
-          $scope.categories = categories;
-        }
-
-        console.log($scope.categories);
+    function display() {
+      $http({
+        method: "GET",
+        url: apiUrl + "product/",
+        withCredentials: true,
       })
-      .catch(function (error) {
-        if (error.data && error.data.message) {
-          // $window.alert(error.data.message);
-        } else {
-          // $window.alert("An error occurred. Please try again");
-        }
-      });
+        .then(function (response) {
+          console.log(response);
+          var categories = response.data;
+
+          if (categories) {
+            $scope.categories = categories;
+          }
+
+          console.log($scope.categories);
+        })
+        .catch(function (error) {
+          if (error.data && error.data.message) {
+            // $window.alert(error.data.message);
+          } else {
+            // $window.alert("An error occurred. Please try again");
+          }
+        });
+    }
+
+    display();
 
     $scope.showProducts = function (category) {
-        $rootScope.categoryProductId = category.id;
-  
-        $http({
-          method: "GET",
-          url: apiUrl + "addproduct/",
-          withCredentials: true,
-          params: { categoryid: category.id },
+      $rootScope.categoryProductId = category.id;
+
+      $http({
+        method: "GET",
+        url: apiUrl + "addproduct/",
+        withCredentials: true,
+        params: { categoryid: category.id },
+      })
+        .then(function (response) {
+          console.log(response);
         })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      };
+        .catch(function (error) {
+          console.log(error);
+        });
+    };
 
     $scope.logout = function () {
       $http({
@@ -274,6 +272,7 @@ myApp.controller("managerController", [
       })
         .then(function (response) {
           console.log(response);
+          display();
           if (response.data.authenticate_id) {
             // console.log("User is authenticated");
           } else {
@@ -296,6 +295,7 @@ myApp.controller("managerController", [
       })
         .then(function (response) {
           console.log("deleted");
+          display();
         })
         .catch(function (error) {
           console.log(error);
@@ -343,6 +343,7 @@ myApp.controller("managerController", [
       })
         .then(function (response) {
           console.log(response);
+          display();
         })
         .catch(function (error) {
           console.log(error);
@@ -358,64 +359,41 @@ myApp.controller("productController", [
   "$rootScope",
   "$stateParams",
   function ($scope, $http, $state, $rootScope, $stateParams) {
-   
     $scope.openModal = function () {
       $("#productModal").modal("show");
     };
 
-    $scope.closeModal = function(){
-      $("#productModal").modal("hide")
+    $scope.closeModal = function () {
+      $("#productModal").modal("hide");
+    };
+
+    function display() {
+      category_ID = $rootScope.categoryProductId;
+
+      $http({
+        method: "GET",
+        url: apiUrl + "addproduct/",
+        withCredentials: true,
+        params: { categoryid: category_ID },
+      })
+        .then(function (response) {
+          products = response.data;
+
+          if (products) {
+            $scope.products = products;
+          }
+
+          console.log($scope.products);
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
     }
 
-    category_ID = $rootScope.categoryProductId;
-    console.log(category_ID);
-
-    // console.log('$stateParams:', $stateParams); // Log the entire $stateParams object
-    // var categoryId = $stateParams.category_ID;
-    // console.log('category_ID:', categoryId);
-    // // category_ID = $rootScope.categoryProductId;
-    // console.log(category_ID);
-
-    $http({
-      method: "GET",
-      url: apiUrl + "addproduct/",
-      withCredentials: true,
-      params: { categoryid: category_ID },
-    })
-      .then(function (response) {
-        products = response.data;
-
-        if (products) {
-          $scope.products = products;
-        }
-
-        console.log($scope.products);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    display();
 
     $scope.addProduct = function (category) {
       var productImage = document.getElementById("productImage").files[0];
-
-      // var manufacturingDate = new Date($scope.product.manufacturingDate);
-
-      // var formattedManufacturingDate =
-      //   manufacturingDate.getFullYear() +
-      //   "-" +
-      //   (manufacturingDate.getMonth() + 1) +
-      //   "-" +
-      //   manufacturingDate.getDate();
-
-      // var expiryDate = new Date($scope.product.expiryDate);
-
-      // var formattedExpiryDate =
-      //   expiryDate.getFullYear() +
-      //   "-" +
-      //   (expiryDate.getMonth() + 1) +
-      //   "-" +
-      //   expiryDate.getDate();
-
       var productData = new FormData();
 
       productData.append("categoryid", $rootScope.categoryProductId);
@@ -424,11 +402,6 @@ myApp.controller("productController", [
       productData.append("price", $scope.product.price);
       productData.append("quantity", $scope.product.quantity);
       productData.append("unit", $scope.product.unit);
-      // productData.append(
-      //   "product_manufacture_date",
-      //   formattedManufacturingDate
-      // );
-      // productData.append("product_expiry_date", formattedExpiryDate);
       productData.append("image", productImage);
 
       console.log(productData);
@@ -442,6 +415,7 @@ myApp.controller("productController", [
       })
         .then(function (response) {
           console.log(response);
+          display();
         })
         .catch(function (error) {
           console.error(error);
@@ -466,7 +440,6 @@ myApp.controller("productController", [
     };
 
     $scope.cancelEdit = function (editingProduct) {
-      
       editingProduct.editMode = false;
 
       $scope.editingProduct = editingProduct;
@@ -478,9 +451,8 @@ myApp.controller("productController", [
       $scope.editingProduct.updateUnit = editingProduct.Unit;
     };
 
-    $scope.saveEdit = function(product, index){
-
-      console.log(index)
+    $scope.saveEdit = function (product, index) {
+      console.log(index);
 
       if (product.updateName) {
         product.product_name = product.updateName;
@@ -497,29 +469,16 @@ myApp.controller("productController", [
 
       var testImage = document.getElementById("productImage" + index).files[0];
 
-      // var formattedMfgDate =
-      //   product.updateMfgDate.getFullYear() +
-      //   "-" +
-      //   (product.updateMfgDate.getMonth() + 1) +
-      //   "-" +
-      //   product.updateMfgDate.getDate();
-
-      // var formattedExpDate =
-      //   product.updateExpDate.getFullYear() +
-      //   "-" +
-      //   (product.updateExpDate.getMonth() + 1) +
-      //   "-" +
-      //   product.updateExpDate.getDate();
-
       var updatedProductData = new FormData();
       updatedProductData.append("edt_product_name", product.updateName);
       updatedProductData.append("edt_product_image", testImage);
-      updatedProductData.append("edt_product_description", product.updateDescription);
+      updatedProductData.append(
+        "edt_product_description",
+        product.updateDescription
+      );
       updatedProductData.append("edt_product_price", product.updatePrice);
       updatedProductData.append("edt_product_quantity", product.updateQuantity);
       updatedProductData.append("edt_product_unit", product.updateUnit);
-      // updatedProductData.append("product_manufacture_date", formattedMfgDate);
-      // updatedProductData.append("product_expiry_date", formattedExpDate);
       updatedProductData.append("productid", product.id);
 
       console.log(updatedProductData);
@@ -533,6 +492,7 @@ myApp.controller("productController", [
       })
         .then(function (response) {
           console.log(response);
+          display();
         })
         .catch(function (error) {
           console.log(error);
@@ -541,8 +501,7 @@ myApp.controller("productController", [
       console.log("save product completed");
     };
 
-    $scope.delProduct = function(product){
-
+    $scope.delProduct = function (product) {
       $http({
         method: "DELETE",
         url: apiUrl + "addproduct/",
@@ -551,91 +510,83 @@ myApp.controller("productController", [
       })
         .then(function (response) {
           console.log("deleted");
+          display();
         })
         .catch(function (error) {
           console.log(error);
         });
-    }
-
+    };
   },
 ]);
-
-
 
 myApp.controller("cartController", [
   "$scope",
   "$http",
   "$state",
   function ($scope, $http, $state) {
-
-    $http({
-      method: "GET",
-      url: apiUrl + "addtocart/",
-      withCredentials: true,
-    })
-      .then(function(response){
-        
-        var cartItems = response.data;
-
-        if (cartItems) {
-          $scope.cartItems = cartItems;
-
-          var userId = cartItems[0].User_id;
-
-          $scope.totalPrice = cartItems.reduce(function (total, item) {
-            return total + item.Product__Price;
-          }, 0);
-        }
-
-        console.log($scope.cartItems);
-        
-        if(userId){
-          $scope.userId = userId;
-        }
-        
+    function display() {
+      $http({
+        method: "GET",
+        url: apiUrl + "addtocart/",
+        withCredentials: true,
       })
-      .catch(function(error){
-        console.log(error);
-    })
+        .then(function (response) {
+          var cartItems = response.data;
 
-    $scope.removefromcart = function(cartItem){ 
+          if (cartItems) {
+            $scope.cartItems = cartItems;
 
-      console.log({productid : cartItem.Product__id})
-      // var customerid = cartItem.User_id
-      // console.log(customerid);
+            var userId = cartItems[0].User_id;
 
+            $scope.totalPrice = cartItems.reduce(function (total, item) {
+              return total + item.Product__Price;
+            }, 0);
+          }
+
+          if (userId) {
+            $scope.userId = userId;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    display();
+
+    $scope.removefromcart = function (cartItem) {
       $http({
         method: "DELETE",
         url: apiUrl + "addtocart/",
         withCredentials: true,
-        data: {productid : cartItem.Product__id}
+        data: { productid: cartItem.Product__id },
       })
-        .then(function(response){
+        .then(function (response) {
           console.log(response);
+          display();
         })
-        .catch(function(error){
+        .catch(function (error) {
           console.log(error);
-        })
-    }
+        });
+    };
 
-    $scope.placeOrder = function(userId){
-
-      console.log(userId);
-
+    $scope.placeOrder = function (userId, totalPrice) {
       $http({
         method: "POST",
         url: apiUrl + "buy_cart/",
         withCredentials: true,
-        data : {
-          customerId : userId
-        }
+        data: {
+          customerId: userId,
+          totalPrice: totalPrice,
+        },
       })
-        .then(function(response){
+        .then(function (response) {
           console.log(response);
+          display();
         })
-        .catch(function(error){
+        .catch(function (error) {
           console.log(error);
-        })
-    }
+        });
+    };
   },
 ]);
