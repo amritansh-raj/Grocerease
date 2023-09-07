@@ -1,5 +1,5 @@
 var myApp = angular.module("grocerease", ["ui.router"]);
-var apiUrl = "https://10.21.83.82:8000/groceryapp/";
+var apiUrl = "https://10.21.80.199:8000/groceryapp/";
 
 myApp.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise("/home");
@@ -42,9 +42,8 @@ myApp.controller("indexController", [
 
     $http({
       method: "GET",
-      url: apiUrl + "addproduct/",
-      withCredentials: true,
-      params: {categoryid : 27}
+      url: apiUrl + "homeproduct/",
+      withCredentials: true
     })
       .then( function(response){
 
@@ -70,11 +69,14 @@ myApp.controller("indexController", [
       })
         .then(function(response){
           console.log(response);
+          $window.alert(response.data.message);
         })
-        .cacth(function(error){
+        .catch(function(error){
           console.log(error)
         })
     }
+
+
 
     $scope.submitLoginForm = function () {
       var userLogin = {
@@ -102,6 +104,11 @@ myApp.controller("indexController", [
           if (superuser) {
             $state.go("manager");
           } else {
+            console.log("home");
+            $('.modal-backdrop').remove();
+            // $('#exampleModal').on('shown.bs.modal', function () {
+            //   $('#exampleModal').modal('hide');
+            // });
             $state.go("home");
           }
         })
@@ -130,6 +137,8 @@ myApp.controller("indexController", [
         });
       $state.go("Home");
     };
+
+
   },
 ]);
 
@@ -214,21 +223,21 @@ myApp.controller("managerController", [
       });
 
     $scope.showProducts = function (category) {
-      $rootScope.categoryProductId = category.id;
-
-      $http({
-        method: "GET",
-        url: apiUrl + "addproduct/",
-        withCredentials: true,
-        params: { categoryid: category.id },
-      })
-        .then(function (response) {
-          console.log(response);
+        $rootScope.categoryProductId = category.id;
+  
+        $http({
+          method: "GET",
+          url: apiUrl + "addproduct/",
+          withCredentials: true,
+          params: { categoryid: category.id },
         })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      };
 
     $scope.logout = function () {
       $http({
@@ -347,13 +356,25 @@ myApp.controller("productController", [
   "$http",
   "$state",
   "$rootScope",
-  function ($scope, $http, $state, $rootScope) {
+  "$stateParams",
+  function ($scope, $http, $state, $rootScope, $stateParams) {
+   
     $scope.openModal = function () {
       $("#productModal").modal("show");
     };
 
+    $scope.closeModal = function(){
+      $("#productModal").modal("hide")
+    }
+
     category_ID = $rootScope.categoryProductId;
     console.log(category_ID);
+
+    // console.log('$stateParams:', $stateParams); // Log the entire $stateParams object
+    // var categoryId = $stateParams.category_ID;
+    // console.log('category_ID:', categoryId);
+    // // category_ID = $rootScope.categoryProductId;
+    // console.log(category_ID);
 
     $http({
       method: "GET",
@@ -559,6 +580,8 @@ myApp.controller("cartController", [
         if (cartItems) {
           $scope.cartItems = cartItems;
 
+          var userId = cartItems[0].User_id;
+
           $scope.totalPrice = cartItems.reduce(function (total, item) {
             return total + item.Product__Price;
           }, 0);
@@ -566,9 +589,53 @@ myApp.controller("cartController", [
 
         console.log($scope.cartItems);
         
+        if(userId){
+          $scope.userId = userId;
+        }
+        
       })
       .catch(function(error){
         console.log(error);
+    })
+
+    $scope.removefromcart = function(cartItem){ 
+
+      console.log({productid : cartItem.Product__id})
+      // var customerid = cartItem.User_id
+      // console.log(customerid);
+
+      $http({
+        method: "DELETE",
+        url: apiUrl + "addtocart/",
+        withCredentials: true,
+        data: {productid : cartItem.Product__id}
       })
+        .then(function(response){
+          console.log(response);
+        })
+        .catch(function(error){
+          console.log(error);
+        })
+    }
+
+    $scope.placeOrder = function(userId){
+
+      console.log(userId);
+
+      $http({
+        method: "POST",
+        url: apiUrl + "buy_cart/",
+        withCredentials: true,
+        data : {
+          customerId : userId
+        }
+      })
+        .then(function(response){
+          console.log(response);
+        })
+        .catch(function(error){
+          console.log(error);
+        })
+    }
   },
 ]);

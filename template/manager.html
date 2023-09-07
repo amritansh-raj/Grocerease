@@ -62,24 +62,24 @@
       </div>
 
       <div class="card-container">
-        <div class="row">
-          <div class="col-md-2 me-3 ms-4" style="width: 14rem" ng-repeat="category in categories">
+        <div class="row mt-5">
+          <div class="col-md-2 me-3 ms-4" style="width: 10rem" ng-repeat="category in categories">
             <a ui-sref="productPage" ng-click="showProducts(category)">
-              <img ng-src="https://10.21.83.82:8000/media/{{ category.catog_image }}" alt="{{ category.Category_name }}"
-              width="200" />
+              <img ng-src="https://10.21.80.199:8000/media/{{ category.catog_image }}" alt="{{ category.Category_name }}"
+              width="150" height="100"/>
             </a>
             <div class="card-body"> 
               <h5 class="card-title d-flex justify-content-center">{{ category.Category_name }}</h5>
-              <div class="button" ng-hide="category.editMode">
-                <button class="btn btn-primary" ng-click="editCategory(category)">Edit</button>
-              <button class="btn btn-primary" ng-click="delCategory(category)">Delete</button>
+              <div class="button d-flex justify-content-center" ng-hide="category.editMode">
+                <button class="btn btn-primary me-2 ms-2" ng-click="editCategory(category)">Edit</button>
+                <button class="btn btn-primary" ng-click="delCategory(category)">Delete</button>
               </div>
               <div ng-if="category.editMode">
                 <input type="text" ng-model="category.updateName" class="form-control" />
                 <input type="file" ng-model="category.updateImage" class="custom-file-input" id="updatedImage"
                   accept="image/*" />
                 <button class="btn btn-primary" ng-click="saveEdit(category)">
-                  Add
+                  Edit
                 </button>
                 <button class="btn btn-secondary" ng-click="cancelEdit(category)">
                   Cancel
