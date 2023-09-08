@@ -62,10 +62,8 @@ myApp.controller("indexController", [
     $scope.selectedProductQuantity = 1;
 
     $scope.updateTotalPrice = function (selectedProductQuantity) {
-      console.log(selectedProductQuantity);
       $scope.totalPrice =
         $scope.selectedProduct.Price * selectedProductQuantity; 
-      console.log($scope.totalPrice)
     };
 
     $scope.openProductModal = function (index, selectedProduct) {
@@ -74,7 +72,8 @@ myApp.controller("indexController", [
       $scope.selectedProduct = selectedProduct;
     };
 
-    $scope.buyProduct = function (selectedProduct, selectedProductQuantity) {
+    $scope.buyProduct = function (selectedProduct, selectedProductQuantity, index) {
+
       $http({
         method: "POST",
         url: apiUrl + "buyitem/",
@@ -82,10 +81,17 @@ myApp.controller("indexController", [
         data: {
           productid: selectedProduct.id,
           buy_quantity: selectedProductQuantity,
-
         },
       })
         .then(function (response) {
+          $scope.closeProductModal(index);
+          Swal.fire({
+            icon: "success",
+            title: "Order Placed Successfully",
+            text: "Your order has been successfully placed.",
+            showConfirmButton: false,
+            timer: 2000,
+          });
           console.log(response);
         })
         .catch(function (error) {
@@ -94,7 +100,6 @@ myApp.controller("indexController", [
     };
 
     $scope.closeProductModal = function (index) {
-      console.log("kjad");
       $("#productModal" + index).modal("hide");
     };
 
@@ -119,8 +124,6 @@ myApp.controller("indexController", [
         username: $scope.loginData.username,
         password: $scope.loginData.password,
       };
-
-      console.log(userLogin);
 
       $scope.loginData = {};
 
@@ -196,8 +199,6 @@ myApp.controller("registerController", [
         password: $scope.formData.pass,
         confirmPassword: $scope.formData.cnfrmPass,
       };
-
-      console.log(userData);
 
       if (pass === confirmPass) {
         $scope.formData = {};
@@ -325,7 +326,6 @@ myApp.controller("managerController", [
     };
 
     $scope.delCategory = function (category) {
-      console.log("delete clicked");
 
       $http({
         method: "DELETE",
@@ -662,6 +662,13 @@ myApp.controller("cartController", [
       })
         .then(function (response) {
           console.log(response);
+          Swal.fire({
+            icon: "success",
+            title: "Order Placed Successfully",
+            text: "Your order has been successfully placed.",
+            showConfirmButton: false,
+            timer: 2000,
+          });
           display();
         })
         .catch(function (error) {
