@@ -37,7 +37,8 @@ myApp.controller("indexController", [
   "$http",
   "$state",
   "$window",
-  function ($scope, $http, $state, $window) {
+  "$filter",
+  function ($scope, $http, $state, $window, $filter) {
     $scope.userLoggedIn = false;
 
     $http({
@@ -58,12 +59,45 @@ myApp.controller("indexController", [
         console.log(error);
       });
 
+    $scope.searchTerm = "";
+    $scope.filteredProducts = []; 
+
+    if($scope.searchTerm){
+      $scope.searchProducts = function () {
+        $scope.filteredProducts = $filter('filter')($scope.products, $scope.searchTerm);
+        $scope.length = $scope.filteredProducts.length;
+        if ($scope.length === 0) {
+          Swal.fire({
+            title: "Product/Category Not Found",
+            text: "No products or categories matching your search term were found.",
+            icon: "error",
+          }).then(function () {
+            $scope.$apply(function () {
+              $scope.searchTerm = "";
+            });
+          });
+        } else {
+          console.log($scope.filteredProducts);
+          console.log($scope.length);
+        }
+      };
+    }
+        
+
+    $scope.clearSearch = function () {
+      $scope.searchTerm = "";
+      $scope.filteredProducts = [];
+      $scope.length = $scope.filteredProducts.length;
+      console.log($scope.length);
+    };
+    
+
     $scope.selectedProduct = {};
     $scope.selectedProductQuantity = 1;
 
     $scope.updateTotalPrice = function (selectedProductQuantity) {
       $scope.totalPrice =
-        $scope.selectedProduct.Price * selectedProductQuantity; 
+        $scope.selectedProduct.Price * selectedProductQuantity;
     };
 
     $scope.openProductModal = function (index, selectedProduct) {
@@ -72,8 +106,11 @@ myApp.controller("indexController", [
       $scope.selectedProduct = selectedProduct;
     };
 
-    $scope.buyProduct = function (selectedProduct, selectedProductQuantity, index) {
-
+    $scope.buyProduct = function (
+      selectedProduct,
+      selectedProductQuantity,
+      index
+    ) {
       $http({
         method: "POST",
         url: apiUrl + "buyitem/",
@@ -326,7 +363,6 @@ myApp.controller("managerController", [
     };
 
     $scope.delCategory = function (category) {
-
       $http({
         method: "DELETE",
         url: apiUrl + "product/",
@@ -584,9 +620,8 @@ myApp.controller("cartController", [
             $scope.cartItems = cartItems;
 
             $scope.totalItem = cartItems.length;
-            console.log($scope.totalItem);
 
-            if (userId) var userId = cartItems[0].User_id;
+            var userId = cartItems[0].User_id;
 
             $scope.totalPrice = cartItems.reduce(function (total, item) {
               return total + item.Product__Price;
@@ -596,6 +631,8 @@ myApp.controller("cartController", [
           if (userId) {
             $scope.userId = userId;
           }
+
+          console.log($scope.userId);
         })
         .catch(function (error) {
           console.log(error);

@@ -13,31 +13,19 @@
 <body ng-app="grocerease" ui-view>
     <nav class="navbar navbar-expand-lg navbar-light bg-light"> 
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"> <img src="media/logo/leaves.png" alt="Grocerease" height="30px" width="200px"></a>
+            <a class="navbar-brand" ng-click="clearSearch()"> <img src="media/logo/leaves.png" alt="Grocerease" height="30px" width="200px"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <form class="d-flex search-bar">
-                        <input class="form-control me-2" id="search-icon" type="search" placeholder="&#xF52A; Search" aria-label="Search">
-                        <button class="btn btn-outline-success" id="search" type="submit">Search</button>
+                        <input class="form-control me-2" id="search-icon" type="search" placeholder="&#xF52A; Search" aria-label="Search" ng-model="searchTerm">
+                        <button class="btn btn-outline-success" id="search" type="submit" ng-click="searchProducts()">Search</button>
                     </form>
                 </div>
                 <div class="navbar-nav ms-auto">
                     <ul class="navbar-nav ml-auto">
-                        <!-- <li class="nav-item category">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" ng-click="toggleDropdown()" aria-expanded="false">
-                                    Dropdown link
-                                </button>
-                                <ul class="dropdown-menu" ng-show="isDropdownOpen">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </div>                            
-                        </li> -->
                         <li class="nav-item cart-Btn">
                             <a class="nav-link cart-Btn" ui-sref="cart" style="background-color: #fe7b05; border-radius: 5px; color: white;">
                                 <i class="bi bi-cart-fill"></i> Cart
@@ -92,7 +80,7 @@
         </div>
       </nav>
 
-        <div class="container-fluid ng-scope">
+        <div class="container-fluid" ng-hide="length > 0">
             <div class="row">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-md-10">
@@ -100,9 +88,6 @@
                         <div class="row posters mt-5">
                             <div class="col-md-4">
                                 <img src="media/banners/Artboard 2.jpg" alt="">
-                                <div class="sale">
-                                    50% <br>off 
-                                </div>
                             </div>
                             <div class="col-md-8">
                                 <img src="media/banners/Artboard 3(1).png" alt="">
@@ -152,6 +137,25 @@
                 </div>
             </div>
         </div>
+
+        <div ng-show="length > 0">
+            <h2>Search Results</h2>
+            <div class="row filtered-products">
+              <div class="col-md-2 mb-3 d-flex justify-content-center" ng-repeat="filteredProduct in filteredProducts">
+                <div class="card" style="width: 14rem;">
+                    <img src="https://10.21.83.43:8000/media/{{ filteredProduct.Image }}" class="card-img-top" alt="..." height="200" width="200">
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{filteredProduct.Product_name}}</h5>
+                        <p class="card-text">₹{{filteredProduct.Price}}</p>
+                    </div>
+                    <div class="card-body d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary btn-sm me-2" style="width: 100px; height: 40px;" ng-click="selectedProduct = product; openProductModal($index, selectedProduct)">Buy now</button>
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="addtocart(product)" style="width: 100px; height: 40px;">Add to cart</button>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
         <div class="footer mt-5" style="background-color: #f8f9fa;">
             <div class="foot-heading d-flex justify-content-center align-items-center">
