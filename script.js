@@ -1,5 +1,5 @@
 var myApp = angular.module("grocerease", ["ui.router"]);
-var apiUrl = "https://10.21.80.199:8000/groceryapp/";
+var apiUrl = "https://10.21.83.43:8000/groceryapp/";
 
 myApp.config(function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise("/home");
@@ -57,6 +57,46 @@ myApp.controller("indexController", [
       .catch(function (error) {
         console.log(error);
       });
+
+    $scope.selectedProduct = {};
+    $scope.selectedProductQuantity = 1;
+
+    $scope.updateTotalPrice = function (selectedProductQuantity) {
+      console.log(selectedProductQuantity);
+      $scope.totalPrice =
+        $scope.selectedProduct.Price * selectedProductQuantity; 
+      console.log($scope.totalPrice)
+    };
+
+    $scope.openProductModal = function (index, selectedProduct) {
+      $("#productModal" + index).modal("show");
+      $scope.totalPrice = selectedProduct.Price;
+      $scope.selectedProduct = selectedProduct;
+    };
+
+    $scope.buyProduct = function (selectedProduct, selectedProductQuantity) {
+      $http({
+        method: "POST",
+        url: apiUrl + "buyitem/",
+        withCredentials: true,
+        data: {
+          productid: selectedProduct.id,
+          buy_quantity: selectedProductQuantity,
+
+        },
+      })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    };
+
+    $scope.closeProductModal = function (index) {
+      console.log("kjad");
+      $("#productModal" + index).modal("hide");
+    };
 
     $scope.addtocart = function (product) {
       $http({
@@ -524,6 +564,13 @@ myApp.controller("cartController", [
   "$http",
   "$state",
   function ($scope, $http, $state) {
+    $scope.cartItems = [];
+    $scope.totalPrice = 0;
+
+    $scope.cartItems.forEach(function (cartItem) {
+      cartItem.quantity = 1;
+    });
+
     function display() {
       $http({
         method: "GET",
@@ -536,7 +583,10 @@ myApp.controller("cartController", [
           if (cartItems) {
             $scope.cartItems = cartItems;
 
-            var userId = cartItems[0].User_id;
+            $scope.totalItem = cartItems.length;
+            console.log($scope.totalItem);
+
+            if (userId) var userId = cartItems[0].User_id;
 
             $scope.totalPrice = cartItems.reduce(function (total, item) {
               return total + item.Product__Price;
@@ -553,6 +603,36 @@ myApp.controller("cartController", [
     }
 
     display();
+
+    $scope.updateQuantity = function (cartItem) {
+      changeQuantity(cartItem);
+      updateTotalPrice();
+    };
+
+    function changeQuantity(cartItem) {
+      $http({
+        method: "PUT",
+        url: apiUrl + "edtaddtocart/",
+        withCredentials: true,
+        data: {
+          edit_cart: cartItem.Add_to_cart_no,
+          productId: cartItem.Product__id,
+        },
+      })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    function updateTotalPrice() {
+      $scope.totalPrice = $scope.cartItems.reduce(function (total, item) {
+        return total + item.Product__Price * item.Add_to_cart_no;
+      }, 0);
+      console.log($scope.totalPrice);
+    }
 
     $scope.removefromcart = function (cartItem) {
       $http({
